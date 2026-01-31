@@ -1,0 +1,20 @@
+meta {
+  name: update-user-avatar
+  type: http
+  seq: 8
+}
+
+patch {
+  url: http://localhost:3000/api/users/avatar/6
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  newAvatar: /img/profile.webp
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

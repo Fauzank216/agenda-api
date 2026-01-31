@@ -1,0 +1,23 @@
+meta {
+  name: create-user
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/api/users/
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  name: irfan
+  username: irfan
+  email: fans@gmail.com
+  password: fan123
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

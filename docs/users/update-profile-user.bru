@@ -1,0 +1,22 @@
+meta {
+  name: update-profile-user
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:3000/api/users/6
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  newName: irfan
+  newUsername: irfan_
+  newEmail: fan@gmail.com
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
