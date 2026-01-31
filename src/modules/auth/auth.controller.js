@@ -9,11 +9,7 @@ export class AuthController {
 
             const request = await authService.login(email, password)
 
-            return res.status(200).json({
-                success: true,
-                message: 'Login berhasil',
-                data: request
-            })
+            return res.status(200).json(request)
 
         } catch (err) {
             next(err)

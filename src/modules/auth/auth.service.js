@@ -7,27 +7,36 @@ export class AuthService {
   login = async (email, password) => {
     let findUser = await UserModel.findByEmail(email)
 
-    if (!findUser) {
+    if (!findUser || findUser.length === 0) {
       throw new UnauthorizedError("Email Atau Password Salah.")
     }
 
-    let encryptedPassword = findUser[0].password
+    const userData = findUser[0]
+    console.log("Dari Auth Serive : ")
+    console.log(userData)
+    const encryptedPassword = userData.Password
 
-    let isMatch = bcrypt.compare(password, encryptedPassword)
+    let isMatch = await bcrypt.compare(password, encryptedPassword)
 
     if (!isMatch) {
       throw new UnauthorizedError("Email Atau Password Salah.")
     }
 
-    let { Name, Username, Email, role } = findUser[0]
+    let { Name, Username, Email, Avatar, role } = userData
 
-    let token = jwt.sign({ email, role }, 'SECRET_KEY02')
+    let token = jwt.sign({ Email, role }, 'SECRET_KEY02')
 
-    return [
-      {
-        jwt: token,
-        user: { Name, Username, Email }
+    return {
+      success:true,
+      message:"Login Berhasil",
+      token,
+      data:{
+        id:userData.Id,
+        name:userData.Name,
+        username:userData.Username,
+        email:userData.Email,
+        avatar:userData.Avatar
       }
-    ]
+    }
   }
 }
