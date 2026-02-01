@@ -1,7 +1,7 @@
 import { body } from "express-validator"
 import { validateRequest } from "../../middlewares/validator.middleware.js"
 
-const classValidator = [
+export const classValidator = [
     body("name")
     .notEmpty()
     .withMessage("Name Tidak Boleh Kosong"),
