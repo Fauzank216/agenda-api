@@ -1,5 +1,5 @@
 import { connection } from "../../../config/db/config.db.js"
-//implement logic
+
 export class ClassModel {
     static create = async function (name, majorId, level) {
         let main = null
