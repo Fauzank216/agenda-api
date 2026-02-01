@@ -24,7 +24,7 @@ export class AuthService {
 
     let { Name, Username, Email, Avatar, role } = userData
 
-    let token = jwt.sign({ Email, role }, 'SECRET_KEY02')
+    let token = jwt.sign({ Email, role }, process.env.JWT_SECRET)
 
     return {
       success:true,
