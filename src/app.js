@@ -2,7 +2,7 @@ import express from "express";
 import { authRouter } from "./modules/auth/auth.route.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandler.middleware.js";
 import { userRouter } from "./modules/user/user.route.js";
-
+import { majorRouter } from "./modules/major/major.route.js";
 const app = express()
 const port = 3000
 
@@ -17,5 +17,7 @@ app.listen(port, () => {
 app.use('/api/auth', authRouter)
 
 app.use('/api/users', userRouter)
+
+app.use('/api/majors', majorRouter)
 
 app.use(errorHandlerMiddleware)
