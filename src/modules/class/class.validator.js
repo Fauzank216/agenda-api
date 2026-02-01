@@ -1,6 +1,6 @@
 import { body } from "express-validator"
 import { validateRequest } from "../../middlewares/validator.middleware.js"
-//implement logic
+
 const classValidator = [
     body("name")
     .notEmpty()
