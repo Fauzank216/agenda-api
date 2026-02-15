@@ -57,7 +57,7 @@ export class MajorService {
         return {
             succes:true,
             message:"Berhasil Mendapatkan Semua Major",
-            data:major
+            data:major[0]
         }
     }
 }

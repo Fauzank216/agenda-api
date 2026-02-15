@@ -8,7 +8,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [name, username, email, password])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -20,7 +22,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query)
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -32,7 +36,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [newName, newUsername, newEmail, password, userId])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -44,7 +50,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [userId])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -57,7 +65,9 @@ export class UserModel {
             return QueryResult
 
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -69,7 +79,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [newPassword, userId])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -81,7 +93,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [newAvatar, userId])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -93,7 +107,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [email])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 
@@ -105,7 +121,9 @@ export class UserModel {
             let [QueryResult] = await main.query(query, [userId])
             return QueryResult
         } finally {
-            await main.end()
+            if (main) {
+                await main.end()
+            }
         }
     }
 }

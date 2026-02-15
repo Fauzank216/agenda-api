@@ -1,20 +1,18 @@
 meta {
-  name: login
+  name: create-major
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
-  url: http://localhost:3000/api/auth/login
+  url: http://localhost:3000/api/majors/
   body: formUrlEncoded
   auth: inherit
 }
 
 body:form-urlencoded {
-  name: irfan
-  username: irfan
-  email: fan@gmail.com
-  password: fan123_
+  name: BCR
+  fullName: BroadCast
 }
 
 settings {

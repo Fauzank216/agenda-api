@@ -1,0 +1,20 @@
+meta {
+  name: find-major-by-name
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3000/api/majors/name?value=RPL
+  body: none
+  auth: inherit
+}
+
+params:query {
+  value: RPL
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

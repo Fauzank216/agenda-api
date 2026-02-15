@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-
+// console.log(process.env)
 export async function connection() {
     const main = await mysql.createConnection({
         host:process.env.DB_HOST,
@@ -8,4 +8,4 @@ export async function connection() {
         database:process.env.DB_NAME
     })
     return main
-}
+} 

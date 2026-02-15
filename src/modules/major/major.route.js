@@ -1,10 +1,12 @@
 import express from 'express'
 import { MajorController } from './major.controller.js'
+import { createMajorValidator, updateMajorValidator } from './major.validator.js'
 export const majorRouter = express.Router()
 
-majorRouter.post('/', MajorController.create)
-majorRouter.patch('/:majorId', MajorController.update)
+//menambahkan penggunaan validator
+majorRouter.post('/', createMajorValidator, MajorController.create)
+majorRouter.patch('/:majorId', updateMajorValidator, MajorController.update)
 majorRouter.delete('/:majorId', MajorController.delete)
-majorRouter.get('/', MajorController.findAll)
 majorRouter.get('/name', MajorController.findByName)
-majorRouter.get('/majorId', MajorController.findById)
+majorRouter.get('/', MajorController.findAll)
+majorRouter.get('/:majorId', MajorController.findById)

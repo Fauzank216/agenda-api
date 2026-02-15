@@ -6,7 +6,7 @@ export class MajorModel {
         try {
             const query = 'INSERT INTO t_majors (Name, Full_name) VALUES(?, ?)'
             main = await connection()
-            let [QueryResult] = main.query(query, [name, fullName])
+            let [QueryResult] = await main.query(query, [name, fullName])
             return QueryResult
         } finally {
             await main.end()
@@ -18,7 +18,7 @@ export class MajorModel {
         try {
             const query = 'UPDATE t_majors SET Name = ?, Full_name = ? WHERE Id = ?'
             main = await connection()
-            let [QueryResult] = main.query(query, [newName, newFullName, majorId])
+            let [QueryResult] = await main.query(query, [newName, newFullName, majorId])
             return QueryResult
         } finally {
             await main.end()
@@ -69,7 +69,7 @@ export class MajorModel {
             let [QueryResult] = await main.query(query, [majorId])
             return QueryResult
         } finally {
-            main.end()
+            await main.end()
         }
     }
 }
