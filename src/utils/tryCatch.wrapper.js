@@ -1,4 +1,6 @@
-export const tryCatchWrapper = async function(fn) {
+import { connection } from "../../config/db/config.db.js"
+
+export const tryCatchWrapper = function(fn) {
     return async function(req, res, next) {
         try{
             await fn(req, res)
@@ -7,3 +9,17 @@ export const tryCatchWrapper = async function(fn) {
         }
     }
 }
+
+export const runQuery = async function(query, payload) {
+    let main = null
+    try{
+        main = await connection()
+        let [QueryResult] = await main.query(query, payload)
+        return QueryResult
+    }finally{
+        if(main !== null){
+           await main.end()
+        }
+    }
+}
+
