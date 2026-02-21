@@ -1,0 +1,20 @@
+meta {
+  name: findByName
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:3000/api/users/search?name=irfan
+  body: none
+  auth: inherit
+}
+
+params:query {
+  name: irfan
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
