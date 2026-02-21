@@ -1,83 +1,61 @@
 import { UserModel } from "./user.model.js"
 import { UserService } from "./user.service.js"
+import { tryCatchWrapper } from "../../utils/tryCatch.wrapper.js"
 export class UserController {
-    static create = async function (req, res, next) {
-        let { name, username, email, password } = req.body
-        try {
-            let newUser = await UserService.create(name, username, email, password)
-            return res.status(200).json(newUser)
-        } catch (err) {
-            next(err)
-        }
-    }
 
-    static findAll = async function (req, res, next) {
-        try {
-            let users = await UserService.findAll()
-            return res.status(200).json(users)
-        } catch (err) {
-            next(err)
-        }
-    }
+    static create = tryCatchWrapper(async (req, res, next) => {
+        let newUser = await UserService.create(req.body)
+        return res.status(200).json(newUser)
+    })
 
-    static update = async function (req, res, next) {
+    static findAll = tryCatchWrapper(async function (req, res, next) {
+        let result = await UserService.findAll()
+        return res.status(200).json(result)
+    })
+
+    static update = tryCatchWrapper(async function (req, res, next) {
         let userId = req.params.userId
         let { newName, newUsername, newEmail } = req.body
-        try {
-            let updatedUser = await UserService.update(userId, newName, newUsername, newEmail)
-            return res.status(200).json(updatedUser)
-        } catch (err) {
-            next(err)
-        }
-    }
-    static delete = async function (req, res, next) {
-        let userId = req.params.userId
-        try {
-            let deletedUser = await UserService.delete(userId)
-            return res.status(200).json(deletedUser)
-        } catch (err) {
-            next(err)
-        }
-    }
+        let result = await UserService.update({userId, newName, newUsername, newEmail})
+        return res.status(200).json(result)
+    })
 
-    static updateStatus = async function (req, res, next) {
+    static delete = tryCatchWrapper(async function (req, res, next) {
+        let userId = req.params.userId
+        let deletedUser = await UserService.delete(userId)
+        return res.status(200).json(deletedUser)
+    })
+
+    static updateStatus = tryCatchWrapper(async function (req, res, next) {
         let userId = req.params.userId
         let { newStatus } = req.body
-        try {
-            let updatedStatus = await UserService.updateStatus(userId, newStatus)
-            return res.status(200).json(updatedStatus)
-        } catch (err) {
-            next(err)
-        }
-    }
-    static updatePassword = async function (req, res, next) {
+        let updatedStatus = await UserService.updateStatus({userId, newStatus})
+        return res.status(200).json(updatedStatus)
+    })
+
+    static updatePassword = tryCatchWrapper(async function (req, res, next) {
         let userId = req.params.userId
         let { newPassword } = req.body
-        try {
-            let updatedPassword = await UserService.updatePassword(userId, newPassword)
-            return res.status(200).json(updatedPassword)
-        } catch (err) {
-            next(err)
-        }
-    }
+        let updatedPassword = await UserService.updatePassword({userId, newPassword})
+        return res.status(200).json(updatedPassword)
+    })
 
-    static updateAvatar = async function (req, res, next) {
+    static updateAvatar = tryCatchWrapper(async function (req, res, next) {
         let userId = req.params.userId
         let { newAvatar } = req.body
-        try {
-            let updatedAvatar = await UserService.updateAvatar(userId, newAvatar)
-            return res.status(200).json(updatedAvatar)
-        } catch (err) {
-            next(err)
-        }
-    }
-    static findByEmail = async function (req, res, next) {
-        let email = req.query
-        try {
-            let user = await UserModel.findByEmail(email)
-            return res.status(200).json(user)
-        } catch (err) {
-            next(err)
-        }
-    }
+        let updatedAvatar = await UserService.updateAvatar({userId, newAvatar})
+        return res.status(200).json(updatedAvatar)
+    })
+
+    static findByName = tryCatchWrapper(async function (req, res, next) {
+        let name = req.query.name
+        let user = await UserService.findByName(name)
+        return res.status(200).json(user)
+    })
+
+    static findById = tryCatchWrapper(async function (req, res, next) {
+        let userId = req.params.userId
+        let user = await UserService.findById(userId)
+        return res.status(200).json(user)
+    })
 }

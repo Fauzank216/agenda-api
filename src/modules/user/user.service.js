@@ -2,59 +2,62 @@ import { BadRequestError } from "../../utils/errors/badRequestError.js"
 import { UserModel } from "./user.model.js"
 import bcrypt from 'bcrypt'
 export class UserService {
-    static create = async function (name, username, email, password) {
+
+    static #formattedData(row) {
+        let formatted = []
+
+        row.forEach(r => {
+            formatted.push({ id: r.Id, name: r.Name, username: r.Username, email: r.Email, avatar: r.Avatar, status: r.Status })
+        })
+
+        return formatted
+    }
+
+    static create = async function ({ name, username, email, password }) {
 
         let isEmailUsed = await UserModel.findByEmail(email)
-        console.log(`Dari user service :`)
-        console.log(isEmailUsed)
+
         if (isEmailUsed.length != 0) {
-            throw new BadRequestError("Email Sudah Terdaftar")
+            throw new BadRequestError("Email Tidak Valid")
         }
 
         let hashedPassword = await bcrypt.hash(password, 10)
 
-        let newUser = await UserModel.create(name, username, email, hashedPassword)
+        let insertId = await UserModel.create({ name, username, email, hashedPassword })
+
+        let result = await UserModel.findById(insertId)
 
         return {
             success: true,
             message: "Guru Berhasil Ditambahkan",
-            data: {
-                id: newUser.insertId,
-                name,
-                username,
-                email
-            }
+            data: UserService.#formattedData(result)[0]
         }
     }
 
     static findAll = async function () {
-        let users = await UserModel.findAll()
+        let row = await UserModel.findAll()
         return {
             success: true,
-            message: "Berhasil Mendapatkan Semua Guru",
-            data: users
+            message: "Data Berhasil diambil",
+            data: UserService.#formattedData(row)
         }
     }
 
-    static update = async function (userId, newName, newUsername, newEmail) {
+    static update = async function ({ userId, newName, newUsername, newEmail }) {
         let [user] = await UserModel.findByEmail(newEmail)
-        console.log("Dari user service : ")
-        console.log(user)
+
         if (user.Id != userId) {
-            throw new BadRequestError("Email Sudah Digunakan")
+            throw new BadRequestError("Email Tidak Valid")
         }
 
-        await UserModel.update(userId, newName, newUsername, newEmail, user.Password)
+        let insertId = await UserModel.update({ userId, newName, newUsername, newEmail, password: user.Password })
+
+        let row = await UserModel.findById(insertId)
 
         return {
             success: true,
             message: "Profile Berhasil diperbarui",
-            data: {
-                id: userId,
-                name: newName,
-                username: newUsername,
-                email: newEmail
-            }
+            data: UserService.#formattedData(row)
         }
 
     }
@@ -63,27 +66,27 @@ export class UserService {
         let user = await UserModel.findById(userId)
 
         if (!user) {
-            throw new BadRequestError("Id yang dimasukan salah")
+            throw new BadRequestError("User id Tidak Valid")
         }
 
         await UserModel.delete(userId)
 
         return {
             success: true,
-            message: "User Berhasil dihapus",
+            message: "Data berhasil dihapus",
             data: null
 
         }
     }
 
-    static updateStatus = async function (userId, newStatus) {
+    static updateStatus = async function ({ userId, newStatus }) {
         let user = await UserModel.findById(userId)
 
         if (!user) {
-            throw new BadRequestError("Id yang dimasukan salah")
+            throw new BadRequestError("User id Tidak Valid")
         }
 
-        await UserModel.updateStatus(userId, newStatus)
+        await UserModel.updateStatus({ userId, newStatus })
 
         return {
             success: true,
@@ -92,16 +95,16 @@ export class UserService {
         }
     }
 
-    static updatePassword = async function (userId, newPassword) {
+    static updatePassword = async function ({userId, newPassword}) {
         let user = await UserModel.findById(userId)
 
         if (!user) {
-            throw new BadRequestError("Id yang dimasukan salah")
+            throw new BadRequestError("User id Tidak valid")
         }
 
         let hashedPassword = await bcrypt.hash(newPassword, 10)
 
-        await UserModel.updatePassword(userId, hashedPassword)
+        await UserModel.updatePassword({ userId, hashedPassword })
 
         return {
             success: true,
@@ -110,35 +113,65 @@ export class UserService {
         }
     }
 
-    static updateAvatar = async function (userId, newAvatar) {
+    static updateAvatar = async function ({ userId, newAvatar }) {
 
         let user = await UserModel.findById(userId)
 
         if (!user) {
-            throw new BadRequestError("Id yang dimasukan salah")
+            throw new BadRequestError("User id Tidak Valid")
         }
 
-        await UserModel.updateAvatar(userId, newAvatar)
+        await UserModel.updateAvatar({ userId, newAvatar })
 
+        let result = await UserModel.findById(userId)
+     
         return {
             success: true,
             message: "Berhasil Memperbarui Avatar",
-            data: { avatar: newAvatar }
+            data: { avatar: result[0].Avatar }
         }
 
     }
 
     static findByEmail = async function (email) {
-        let user = await UserModel.findByEmail(email)
+        let result = await UserModel.findByEmail(email)
 
-        if (!user) {
-            throw new BadRequestError("Email yang dimasukan salah")
+        if (!result) {
+            throw new BadRequestError("Email Tidak Valid")
         }
 
         return {
             success: true,
-            message: "User Berhasil ditemukan",
-            data: user
+            message: "Data Berhasil ditemukan",
+            data: UserService.#formattedData(result)
+        }
+    }
+
+    static findById = async function (userId) {
+        let result = await UserModel.findById(userId)
+
+        if (!result) {
+            throw new BadRequestError("User id Tidak Valid")
+        }
+
+        return {
+            success: true,
+            message: "Data Berhasil ditemukan",
+            data: UserService.#formattedData(result)[0]
+        }
+    }
+
+    static findByName = async function (Name) {
+        let result = await UserModel.findByName(Name)
+
+        if (!result) {
+            throw new BadRequestError("User id Tidak Valid")
+        }
+
+        return {
+            success: true,
+            message: "Data Berhasil ditemukan",
+            data: UserService.#formattedData(result)
         }
     }
 }

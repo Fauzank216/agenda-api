@@ -1,129 +1,63 @@
-import { connection } from "../../../config/db/config.db.js"
+import { runQuery } from "../../utils/tryCatch.wrapper.js"
 export class UserModel {
-    static create = async function (name, username, email, password) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'INSERT INTO t_users(Name, Username, Email, Password) VALUES(?, ?, ?, ?)'
-            let [QueryResult] = await main.query(query, [name, username, email, password])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+
+    static create = async function ({name, username, email, hashedPassword}) {
+        const query = 'INSERT INTO t_users(Name, Username, Email, Password) VALUES(?, ?, ?, ?)'
+        let result = await runQuery(query, [name, username, email, hashedPassword])
+        return result.insertId
     }
 
     static findAll = async function () {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'SELECT * FROM t_users WHERE Role = "Teacher"'
-            let [QueryResult] = await main.query(query)
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+        const query = 'SELECT * FROM t_users WHERE Role = "Teacher"'
+        let result = await runQuery(query, [])
+        return result
     }
 
-    static update = async function (userId, newName, newUsername, newEmail, password) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'UPDATE t_users SET Name = ?, Username = ?, Email = ?, Password = ? WHERE Id = ?'
-            let [QueryResult] = await main.query(query, [newName, newUsername, newEmail, password, userId])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+    static update = async function ({userId, newName, newUsername, newEmail}) {
+        const query = 'UPDATE t_users SET Name = ?, Username = ?, Email = ? WHERE Id = ? '
+        let result = await runQuery(query, [ newName, newUsername, newEmail, userId])
+        return result.insertId
     }
 
     static delete = async function (userId) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'DELETE FROM t_users WHERE id = ?'
-            let [QueryResult] = await main.query(query, [userId])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+        const query = 'DELETE FROM t_users WHERE id = ?'
+        let result = await runQuery(query, [userId])
+        return result
     }
 
-    static updateStatus = async function (userId, newStatus) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'UPDATE t_users SET Status = ? WHERE Id = ?'
-            let [QueryResult] = await main.query(query, [newStatus, userId])
-            return QueryResult
-
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+    static updateStatus = async function ({newStatus, userId}) {
+        const query = 'UPDATE t_users SET Status = ? WHERE Id = ?'
+        let result = await runQuery(query, [newStatus, userId])
+        return result
     }
 
-    static updatePassword = async function (userId, newPassword) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'UPDATE t_users SET Password = ? WHERE Id = ?'
-            let [QueryResult] = await main.query(query, [newPassword, userId])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+    static updatePassword = async function ({hashedPassword, userId}) {
+        const query = 'UPDATE t_users SET Password = ? WHERE Id = ?'
+        let result = await runQuery(query, [hashedPassword, userId])
+        return result
     }
 
-    static updateAvatar = async function (userId, newAvatar) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'UPDATE t_users SET Avatar = ? WHERE Id = ?'
-            let [QueryResult] = await main.query(query, [newAvatar, userId])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+    static updateAvatar = async function ({userId, newAvatar}) {
+        const query = 'UPDATE t_users SET Avatar = ? WHERE Id = ?'
+        let result = await runQuery(query, [newAvatar, userId])
+        return userId
     }
 
     static findByEmail = async function (email) {
-        let main = null
-        try {
-            main = await connection()
-            let query = 'Select * FROM t_users WHERE Email = ?'
-            let [QueryResult] = await main.query(query, [email])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+        const query = 'Select * FROM t_users WHERE Email = ?'
+        let result = await runQuery(query, [email])
+        return result
+    }
+
+    static findByName = async function (name) {
+        const query = 'SELECT * FROM t_users WHERE Name LIKE ?'
+        let result = await runQuery(query, [`%${name}%`])
+        return result
     }
 
     static findById = async function (userId) {
-        let main = null
-        try {
-            const query = 'SELECT * FROM t_users WHERE Id = ?'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [userId])
-            return QueryResult
-        } finally {
-            if (main) {
-                await main.end()
-            }
-        }
+        const query = 'SELECT * FROM t_users WHERE Id = ?'
+        let result = await runQuery(query, [userId])
+        return result
     }
 }

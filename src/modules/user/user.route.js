@@ -17,4 +17,6 @@ userRouter.patch("/password/:userId", UserController.updatePassword)
 
 userRouter.patch("/avatar/:userId", UserController.updateAvatar)
 
-userRouter.get("/search", UserController.findByEmail)
+userRouter.get("/search", UserController.findByName)
+
+userRouter.get('/:userId', UserController.findById)
