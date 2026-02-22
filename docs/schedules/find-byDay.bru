@@ -1,0 +1,20 @@
+meta {
+  name: find-byDay
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3000/api/schedules?day=Rabu&semester=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  day: Rabu
+  semester: 1
+}
+
+settings {
+  encodeUrl: true
+}

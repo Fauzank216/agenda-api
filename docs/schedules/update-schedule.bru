@@ -1,0 +1,26 @@
+meta {
+  name: update-schedule
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:3000/api/schedules/3
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  idUser: 6
+  idClass: 1
+  idSubject: 1
+  idSemester: 1
+  day: Rabu
+  timeStart: 08:00
+  timeEnd: 10:00
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
