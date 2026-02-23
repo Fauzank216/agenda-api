@@ -5,11 +5,17 @@ meta {
 }
 
 get {
-  url: 
+  url: http://localhost:3000/api/schedules?idUser=6&idSemester=1
   body: none
   auth: inherit
 }
 
+params:query {
+  idUser: 6
+  idSemester: 1
+}
+
 settings {
   encodeUrl: true
+  timeout: 0
 }
