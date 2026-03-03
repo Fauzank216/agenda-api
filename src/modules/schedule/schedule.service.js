@@ -50,48 +50,14 @@ export class ScheduleService {
         }
     }
 
-    static findAllSchedule = async function () {
-        let idSemester = await SemesterModel.findByNow()
-        let result = await ScheduleModel.findAllSchedule({idSemester})
+    static findByScheduleById = async function (id_schedule) {
+        let result = await ScheduleModel.findByScheduleId(id_schedule)
         return result
     }
 
-    static findBySemester = async function ({idSemester}) {
-        let result = await ScheduleModel.findBySemester({idSemester})
+    static findAllSchedule = async function (criteria) {
+        let result = await ScheduleModel.findAllSchedule({...criteria})
         return result
     }
 
-    static findByTeacherId = async function ({ idUser, idSemester }) {
-        let result = await ScheduleModel.findByTeacherId({ idUser, idSemester })
-        return {
-            success: true,
-            message: 'Berhasil Mendapatkan data',
-            data: result
-        }
-    }
-
-    static findByDay = async function ({ day, idSemester }) {
-        let result = await ScheduleModel.findByDay({ day, idSemester })
-        return result
-    }
-
-    static findByClass = async function ({ idClass, idSemester }) {
-        let result = await ScheduleModel.findByClass({ idClass, idSemester })
-        return result
-    }
-
-    static findByNow = async function ({ time, idSemester }) {
-        let result = await ScheduleModel.findByNow({ time, idSemester })
-        return result
-    }
-
-    static findUpcomingSchedule = async function ({ time, idSemester }) {
-        let result = await ScheduleModel.findUpcomingSchedule({ time, idSemester })
-        return result
-    }
-
-    static findByScheduleById = async function (idSchedule) {
-        let result = await ScheduleModel.findByScheduleId(idSchedule)
-        return result
-    }
 }
