@@ -1,15 +1,24 @@
 meta {
   name: find-all-schedule
   type: http
-  seq: 11
+  seq: 4
 }
 
 get {
-  url: 
+  url: http://localhost:3000/api/schedules?day=rabu
   body: none
   auth: inherit
 }
 
+params:query {
+  day: rabu
+}
+
+headers {
+  authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJmYW5AZ21haWwuY29tIiwicm9sZSI6InRlYWNoZXIiLCJpYXQiOjE3NzIzNTYyNjd9.lxB5D8wpbGQyi6j6SwMwh9Yh2GQPgf0Gr9PSAAxKOCs
+}
+
 settings {
   encodeUrl: true
+  timeout: 0
 }
