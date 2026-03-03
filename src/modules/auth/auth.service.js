@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 export class AuthService {
-  login = async (email, password) => {
-    let findUser = await UserModel.findByEmail(email)
+  login = async (emails, password) => {
+    let findUser = await UserModel.findByEmail(emails)
 
     if (!findUser || findUser.length === 0) {
       throw new UnauthorizedError("Email Atau Password Salah.")
@@ -14,7 +14,7 @@ export class AuthService {
     const userData = findUser[0]
     console.log("Dari Auth Serive : ")
     console.log(userData)
-    const encryptedPassword = userData.Password
+    const encryptedPassword = userData.password
 
     let isMatch = await bcrypt.compare(password, encryptedPassword)
 
@@ -22,20 +22,20 @@ export class AuthService {
       throw new UnauthorizedError("Email Atau Password Salah.")
     }
 
-    let { Name, Username, Email, Avatar, role } = userData
+    let {id, name, username, email, avatar, role } = userData
 
-    let token = jwt.sign({ Email, role }, process.env.JWT_SECRET)
+    let token = jwt.sign({ id, email, role }, process.env.JWT_SECRET)
 
     return {
       success:true,
       message:"Login Berhasil",
       token,
       data:{
-        id:userData.Id,
-        name:userData.Name,
-        username:userData.Username,
-        email:userData.Email,
-        avatar:userData.Avatar
+        id:userData.id,
+        name:userData.name,
+        username:userData.username,
+        email:userData.email,
+        avatar:userData.avatar
       }
     }
   }
