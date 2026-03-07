@@ -2,17 +2,21 @@ import { body } from "express-validator";
 import {validateRequest} from '../../middlewares/validator.middleware.js'
 
 export const validateAgendaDetail = [
-    body('idAgenda')
+    body('id_agenda')
     .isEmpty()
-    .withMessage('idAgenda tidak boleh kosong'),
+    .withMessage('id_agenda tidak boleh kosong'),
 
-    body('idClassMember')
+    body('id_class_member')
     .isEmpty()
-    .withMessage('idClassMember tidak boleh kosong'),
+    .withMessage('id_class_member tidak boleh kosong'),
 
-    body('statusAttendance')
+    body('status_attandance')
     .isEmpty()
     .withMessage('Status absen tidak boleh kosong'),
+
+    body('id_student')
+    .isEmpty()
+    .withMessage('id_student tidak boleh kosong'),
 
     validateRequest
 

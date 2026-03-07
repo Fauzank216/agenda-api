@@ -1,59 +1,38 @@
-import {connection} from '../../../config/db/config.db.js'
+import { runQuery } from '../../utils/tryCatch.wrapper.js'
 
 export class AgendaDetailModel {
-     static create = async function(idAgenda, idClassMember, statusAttendance) {
-        let main = null
-        const query = 'INSERT INTO t_agenda_details (id_agenda, id_class_member, status_attendance, note)'
-        try{
-            main = await connection()
-            let[QueryResult] = await main.query(query, [idAgenda, idClassMember, statusAttendance, note])
+    static create = async function ({ id_agenda, id_class_member, id_student, status_attandance, note }) {
+        const query = 'INSERT INTO t_agenda_details (id_agenda, id_class_member, id_student, status_attendance, note) VALUES(?, ?, ?, ?, ?)'
+        let result = await runQuery(query, [id_agenda, id_class_member, id_student, status_attandance, note])
+        return result.insertId
+    }
 
-            return {
-                id:QueryResult.insertId,
-                idAgenda,
-                idClassMember, 
-                statusAttendance, 
-                note
-            }
-
-        }finally{
-            await main.end()
-        }
-     }
-
-     static findAll = async function() {
-        let main = null
+    static findAll = async function () {
         const query = 'SELECT * FROM t_agenda_details'
-        try{
-            main = await connection()
-            let[QueryResult] = await main.query(query)
-            return QueryResult
-        }finally{
-            await main.end()
-        }
-     }
+        let result = await runQuery(query, [])
+        return result
+    }
 
-     static update = async function(idAgenda, idClassMember, statusAttendance, note = "", idAgendaDetail) {
-        let main = null
-        const query = 'UPDATE t_agenda_details SET id_agenda = ? id_class_member, statusAttendance = ?, note = ? WHERE id = ?'
+    static updateStatus = async function ({ id_agenda_details, status_attandance }) {
+        const query = 'UPDATE t_agenda_details SET status = ? WHERE id = ?'
+        let result = await runQuery(query, [status_attandance, id_agenda_details])
+        return result
+    }
 
-        try{
-            main = await connection()
-            let[QueryResult] = await main.query(query, [idAgenda, idClassMember, statusAttendance, note, idAgendaDetail])
-        }finally{
-            await main.end()
-        }
-     }
+    static updateNote = async function ({ id_agenda_details, note }) {
+        const query = 'UPDATE t_agenda_details SET note = ? WHERE id = ?'
+        let result = await runQuery(query, [note, id_agenda_details])
+        return result
+    }
 
-     static delete = async function(idAgendaDetail) {
-        let main = null
+    static findById = async function (id_agenda_details) {
+        const query = 'SELECT * FROM t_agenda_details WHERE id = ?'
+        let result = await runQuery(query, [id_agenda_details])
+        return result
+    }
+
+    static delete = async function (id_agenda_details) {
         const query = 'DELETE FROM t_agenda_details WHERE id = ?'
-        try{
-            main = await connection()
-            let[QueryResult] = await main.query(query, [idAgendaDetail])
-            return null
-        }finally{
-            await main.end()
-        }
-     }
+        let result = await runQuery(query, [id_agenda_details])
+    }
 }

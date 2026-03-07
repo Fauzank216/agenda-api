@@ -7,6 +7,10 @@ agendaDetailRouter.post('/', validateAgendaDetail, AgendaDetailController.create
 
 agendaDetailRouter.get('/', AgendaDetailController.findAll)
 
-agendaDetailRouter.patch('/:idAgendaDetail', AgendaDetailController.update)
+agendaDetailRouter.patch('/status/:id_agenda_details', AgendaDetailController.updateStatus)
 
-agendaDetailRouter.delete('/:idAgendaDetail', AgendaDetailController.delete)
+agendaDetailRouter.patch('/note/:id_agenda_details', AgendaDetailController.updateNote)
+
+agendaDetailRouter.delete('/:id_agenda_details', AgendaDetailController.delete)
+
+agendaDetailRouter.get('/:id_agenda_details', AgendaDetailController.findById)
