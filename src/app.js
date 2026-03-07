@@ -5,6 +5,7 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandler.middleware.js
 import { userRouter } from "./modules/user/user.route.js";
 import { majorRouter } from "./modules/major/major.route.js";
 import { classRouter } from './modules/class/class.route.js';
+import { agendaRouter } from './modules/agenda/agenda.route.js';
 import { scheduleRouter } from './modules/schedule/schedule.route.js';
 const app = express()
 const port = 3000
@@ -27,4 +28,5 @@ app.use('/api/class', classRouter)
 
 app.use('/api/schedules', scheduleRouter)
 
+app.use('/api/agendas', agendaRouter)
 app.use(errorHandlerMiddleware)
