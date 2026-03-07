@@ -1,0 +1,23 @@
+meta {
+  name: create-agenda
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/agendas
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  id_schedule: 5
+  id_user: 6
+  created_at: 2026-03-04
+  note: Belajar Mantap
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
