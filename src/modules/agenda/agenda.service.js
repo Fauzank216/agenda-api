@@ -1,21 +1,40 @@
 import { BadRequestError } from "../../utils/errors/badRequestError.js";
 import { AgendaModel } from "./agenda.model.js";
-
+import { connection } from "../../../config/db/config.db.js";
+import { AgendaDetailModel } from "../agenda_detail/agenda-detail.model.js";
 export class AgendaService {
-    static create = async function ({ id_schedule, id_user, created_at, note }) {
-        let isAgendaExist = await AgendaModel.isAgendaExist({ id_schedule, created_at })
-        console.log(isAgendaExist)
-        if (isAgendaExist.length > 0) {
-            throw new BadRequestError('Agenda sudah diisi')
-        }
+    static create = async function (dataAgenda, dataDetail) {
+        let main = null
+        try {
+            main = await connection()
+            await main.beginTransaction()
 
-        let insertId = await AgendaModel.create({ id_schedule, id_user, created_at, note })
+            let id_agenda = await AgendaModel.create(main, dataAgenda)
 
-        let result = await AgendaModel.findById(insertId)
-        return {
-            success: true,
-            message: 'Berhasil menambahkan data',
-            data: result
+            let createDetail = await AgendaDetailModel.create(main,
+                dataDetail.map(d =>
+                    [
+                        id_agenda,
+                        d.id_class_member,
+                        d.status_attendance,
+                        d.note
+                    ]
+                )
+            )
+
+            await main.commit()
+            let result = await AgendaModel.findById(id_agenda)
+            return {
+                success: true,
+                message: 'Berhasil menambahkan data',
+                data: result
+            }
+
+        } catch (err) {
+            await main.rollback()
+            throw err
+        } finally {
+            await main.end()
         }
     }
 
@@ -39,11 +58,11 @@ export class AgendaService {
         }
     }
 
-    static update = async function ({ id_agenda, note }) {
+    static updateNote = async function ({ id_agenda, note }) {
         let updatedAgenda = await AgendaModel.updateNote({ id_agenda, note })
         let result = null
-        console.log(updatedAgenda)
-        if(updatedAgenda.affectedRows > 0){
+       
+        if (updatedAgenda.affectedRows > 0) {
             result = await AgendaModel.findById(id_agenda)
         }
         return {

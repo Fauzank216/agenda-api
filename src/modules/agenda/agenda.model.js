@@ -6,8 +6,9 @@ export class AgendaModel {
             {'id_semester':'t_schedules.id_semester = ?',
              'date_start':'t_agendas.created_at >= ?',
              'date_end':'t_agendas.created_at <= ?',
-             'id_user': 't_users.id = ?',
-             'id_class':'t_class.id = ?'
+             'id_user': 't_schedules.id_user = ?',
+             'id_class':'t_schedules.id_class = ?',
+             'id_agenda':'t_agendas.id = ?'
             }
         let values = []
         let conditions = []
@@ -38,11 +39,12 @@ export class AgendaModel {
         }
 
         let result = await runQuery(query, values)
+        console.log(result)
         return result
     }
-    static create = async function ({id_schedule, id_user, created_at, note}) {
+    static create = async function (conn, dataAgenda) {
         const query = 'INSERT INTO t_agendas (id_schedule, id_user, created_at, note) VALUES (?, ?, ?, ?)'
-        let result = await runQuery(query, [id_schedule, id_user, created_at, note])
+        let [result] = await conn.query(query, [dataAgenda.id_schedule, dataAgenda.id_user, dataAgenda.created_at, dataAgenda.note])
         return result.insertId
     }
 
@@ -65,8 +67,7 @@ export class AgendaModel {
     }
 
     static findById = async function(id_agenda) {
-        const query = 'SELECT * FROM t_agendas WHERE id = ?'
-        let result = await runQuery(query, [id_agenda])
+        let result = await AgendaModel.#findAgendaBy({id_agenda})
         return result
     }
 

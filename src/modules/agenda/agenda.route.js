@@ -8,6 +8,11 @@ export const agendaRouter = express.Router()
 agendaRouter.use(authJwt)
 
 agendaRouter.post('/', authorizationMiddleware('teacher'), agendaValidator, AgendaController.create)
+
 agendaRouter.get('/', AgendaController.findAll)
-agendaRouter.patch('/:id_agenda', AgendaController.update)
+
+agendaRouter.patch('/:id_agenda', AgendaController.updateNote)
+
+agendaRouter.get('/:id_agenda/detail', AgendaController.findDetailById)
+
 agendaRouter.delete('/:id_agenda', authorizationMiddleware('admin'), AgendaController.delete)
