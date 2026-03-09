@@ -1,21 +1,17 @@
 meta {
-  name: update-note
+  name: find agenda + detail
   type: http
-  seq: 2
+  seq: 8
 }
 
-patch {
-  url: http://localhost:3000/api/agendas/1
-  body: formUrlEncoded
+get {
+  url: http://localhost:3000/api/agendas/1/detail
+  body: none
   auth: inherit
 }
 
 headers {
   authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJmYW5AZ21haWwuY29tIiwicm9sZSI6InRlYWNoZXIiLCJpYXQiOjE3NzIzNTYyNjd9.lxB5D8wpbGQyi6j6SwMwh9Yh2GQPgf0Gr9PSAAxKOCs
-}
-
-body:form-urlencoded {
-  note: Latihan Quizz
 }
 
 settings {

@@ -1,11 +1,11 @@
 meta {
-  name: update-note
+  name: update detail
   type: http
-  seq: 2
+  seq: 6
 }
 
 patch {
-  url: http://localhost:3000/api/agendas/1
+  url: http://localhost:3000/api/agenda_details/3
   body: formUrlEncoded
   auth: inherit
 }
@@ -15,7 +15,8 @@ headers {
 }
 
 body:form-urlencoded {
-  note: Latihan Quizz
+  note: sakit pinggang
+  status: hadir
 }
 
 settings {
