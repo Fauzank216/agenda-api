@@ -1,26 +1,14 @@
-import { AgendaDetailModel } from "./agenda-detail.model";
 import { AgendaDetailService } from "./agenda-detail.service.js";
 import { tryCatchWrapper } from '../../utils/tryCatch.wrapper.js'
 export class AgendaDetailController {
-    static create = tryCatchWrapper(async function (req, res) {
-        let result = await AgendaDetailService.create(req.body)
-        return res.status(201).json(result)
-    })
-
     static findAll = tryCatchWrapper(async function (req, res) {
-        let result = await AgendaDetailService.findAll()
+        let result = await AgendaDetailService.findAll(req.query)
         return res.status(200).json(result)
 
     })
-
-    static updateStatus = tryCatchWrapper(async function (req, res) {
-        let result = await AgendaDetailService.updateStatus({status:req.body.status, id_agenda_details:req.params.id_agenda_details})
-        return res.status(201).json(result)
-
-    })
     
-    static updateNote = tryCatchWrapper(async function (req, res) {
-        let result = await AgendaDetailService.update({note:req.body.note, id_agenda_details:req.params.id_agenda_details})
+    static update = tryCatchWrapper(async function (req, res) {
+        let result = await AgendaDetailService.update(req.params.id_agenda_details, req.body)
         return res.status(201).json(result)
 
     })
@@ -33,6 +21,11 @@ export class AgendaDetailController {
 
     static findById = tryCatchWrapper(async function(req, res) {
         let result = await AgendaDetailService.findById(req.params.id_agenda_details)
+        return res.status(200).json(result)
+    })
+
+    static findByAgendaId = tryCatchWrapper(async function(req, res) {
+        let result = await AgendaDetailService.findById(req.params.id_agenda)
         return res.status(200).json(result)
     })
 }
