@@ -4,11 +4,15 @@ import { validateRequest } from "../../middlewares/validator.middleware.js"
 export const classValidator = [
     body("name")
     .notEmpty()
-    .withMessage("Name Tidak Boleh Kosong"),
+    .withMessage("name Tidak Boleh Kosong"),
 
-    body("Id_major")
+    body("id_major")
     .notEmpty()
-    .withMessage("Major Tidak Boleh kosong"),
+    .withMessage("id_major Tidak Boleh kosong"),
 
+    body("grade")
+    .notEmpty()
+    .withMessage("grade Tidak Boleh Kosong"),
+    
     validateRequest
 ]

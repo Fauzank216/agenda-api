@@ -27,28 +27,26 @@ export class ClassModel {
         return result
     }
 
-    static create = async function (name, majorId, grade) {
+    static create = async function ({name, id_major, grade}) {
         const query = 'INSERT INTO t_class(name, id_major, grade) VALUES(?, ?, ?)'
-        let result = await runQuery(query, [name, majorId, grade])
+        let result = await runQuery(query, [name, id_major, grade])
         return result.insertId
     }
 
     static update = async function (id_class, name, id_major, grade) {
-        const query = 'UPDATE t_class SET name = ?, majorId = ?, grade = ? WHERE Id = ?'
+        const query = 'UPDATE t_class SET name = ?, majorId = ?, grade = ? WHERE id = ?'
         let result = await runQuery(query, [name, id_major, grade, id_class])
-        return result
+        return result.affectedRows
     }
 
     static findAll = async function ({ criteria }) {
-        let query = `SELECT t_class.id, t_class.grade, t_major.name, t_class.name FROM t_class INNER JOIN       
-                     t_majors ON t_majors.id = t_class.id_major`
-        let result = await runQuery(query, [...criteria])
+        let result = await ClassModel.#findBy(criteria)
         return result
     }
 
     static delete = async function (id_class) {
         const query = 'DELETE FROM t_class WHERE id = ?'
-        await runQuery(query, id_class)
-        return null
+        let result = await runQuery(query, id_class)
+        return result.affectedRows
     }
 }
