@@ -1,63 +1,75 @@
 import { MajorModel } from "./major.model.js"
 export class MajorService {
-    static create = async function (name, fullName) {
-        await MajorModel.create(name, fullName)
-        return {
-            success: true,
-            message: "Berhasil Menambahkan Jurusan",
-            data: {
-                name,
-                fullName
+    static create = async function ({ major_code, major_name }) {
+        let insertId = await MajorModel.create({ major_code, major_name })
+        if (!insertId) {
+            return {
+                success: true,
+                message: "Gagal Menambahkan Data",
+                data: []
             }
         }
-    }
 
-    static update = async function (majorId, newName, newFullName) {
-        await MajorModel.update(majorId, newName, newFullName)
+        let result = await MajorModel.findById(insertId)
         return {
             success: true,
-            message: "Berhasil Memperbarui Jurusan",
-            data: {
-                id: majorId,
-                name: newName,
-                fullName: newFullName
+            message: "Berhasil Menambahkan Data",
+            data: result
+        }
+    }
+
+    static update = async function ({ id_major, major_code, major_name }) {
+        let affectedRows = await MajorModel.update({ major_code, major_name, id_major })
+
+        if (affectedRows === 0) {
+            return {
+                success: true,
+                message: "Gagal Memperbarui Data",
+                data: []
             }
         }
-    }
 
-    static delete = async function(majorId) {
-        await MajorModel.delete(majorId)
-        return{
-            success:true,
-            message:"Berhasil Menghapus Jurusan",
-            data:null
-        }
-    }
-
-    static findAll = async function() {
-        let majors = await MajorModel.findAll()
-        return{
-            succes:true,
-            message:"Berhasil Mendapatkan Semua Jurusan",
-            data:majors
-        }
-    }
-
-    static findByName = async function(name) {
-        let major = await MajorModel.findByName(name)
-        return{
-            success:true,
-            message:"Berhasil Mendapatkan Semua Jurusan",
-            data:major
-        }
-    }
-
-    static findById = async function(majorId) {
-        let major = await MajorModel.findById(majorId)
+        let result = await MajorModel.findById(id_major)
         return {
-            succes:true,
-            message:"Berhasil Mendapatkan Semua Major",
-            data:major[0]
+            success: true,
+            message: "Berhasil Memperbarui Data",
+            data: result
+        }
+    }
+
+    static delete = async function (id_major) {
+        let affectedRows = await MajorModel.delete(id_major)
+
+        if (affectedRows === 0) {
+            return {
+                success: true,
+                message: "Gagal Memperbarui Data",
+                data: []
+            }
+        }
+
+        return {
+            success: true,
+            message: "Berhasil Menghapus Jurusan",
+            data: null
+        }
+    }
+
+    static findAll = async function () {
+        let result = await MajorModel.findAll()
+        return {
+            succes: true,
+            message: "Berhasil Mendapatkan Data",
+            data: result
+        }
+    }
+
+    static findById = async function (id_major) {
+        let result = await MajorModel.findById(id_major)
+        return {
+            succes: true,
+            message: "Berhasil Mendapatkan Data",
+            data: result
         }
     }
 }

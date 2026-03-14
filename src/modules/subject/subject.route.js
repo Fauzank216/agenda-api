@@ -8,6 +8,6 @@ subjectRouter.post('/', subjectValidator, SubjectController.create),
 
 subjectRouter.get('/', SubjectController.findAll)
 
-subjectRouter.patch('/:idSubject', subjectValidator, SubjectController.update)
+subjectRouter.patch('/:id_subject', subjectValidator, SubjectController.update)
 
-subjectRouter.delete('/:idSubject', SubjectController.delete)
+subjectRouter.delete('/:id_subject', SubjectController.delete)

@@ -1,8 +1,8 @@
-import { SubjectModel } from "./subject.model.js";
-export class SubjectService {
-    static create = async function (subject_name) {
-        let insertId = await SubjectModel.create(subject_name)
+import { ClassMemberModel } from "./class-member.model.js";
 
+export class ClassMemberService {
+    static create = async function ({ id_class, id_student }) {
+        let insertId = await ClassMemberModel.create({ id_class, id_student })
         if (!insertId) {
             return {
                 success: true,
@@ -10,8 +10,7 @@ export class SubjectService {
                 data: []
             }
         }
-
-        let result = await SubjectModel.findById(insertId)
+        let result = await ClassMemberModel.findById(insertId)
         return {
             success: true,
             message: 'Berhasil Menambahkan Data',
@@ -20,7 +19,7 @@ export class SubjectService {
     }
 
     static findAll = async function () {
-        let result = await SubjectModel.findAll()
+        let result = await ClassMemberModel.findAll()
         return {
             success: true,
             message: 'Berhasil Mendapat Data',
@@ -28,10 +27,8 @@ export class SubjectService {
         }
     }
 
-    static update = async function ({ subject_name, id_subject }) {
-
-        let affectedRows = await SubjectModel.update({ subject_name, id_subject })
-
+    static update = async function ({ id_class, id_student, id_class_member }) {
+        let affectedRows = await ClassMemberModel.update({ id_class, id_student, id_class_member })
         if (affectedRows === 0) {
             return {
                 success: true,
@@ -40,7 +37,7 @@ export class SubjectService {
             }
         }
 
-        let result = await SubjectModel.findById(id_subject)
+        let result = await ClassMemberModel.findById(id_class_member)
         return {
             success: true,
             message: 'Berhasil Memperbarui Data',
@@ -48,9 +45,8 @@ export class SubjectService {
         }
     }
 
-    static delete = async function (id_subject) {
-        let affectedRows = await SubjectModel.delete(id_subject)
-
+    static delete = async function (id_class_member) {
+        let affectedRows = await ClassMemberModel.delete(id_class_member)
         if (affectedRows === 0) {
             return {
                 success: true,
@@ -61,18 +57,17 @@ export class SubjectService {
 
         return {
             success: true,
-            message: 'Berhasil Memperbarui Data',
+            message: 'Berhasil Menghapus Data',
             data: null
         }
     }
 
-    static findById = async function (id_subject) {
-        let result = await SubjectModel.findById(id_subject)
+    static findById = async function (id_class_member) {
+        let result = await ClassMemberModel.findById(id_class_member)
         return {
             success: true,
             message: 'Berhasil Mendapat Data',
             data: result
         }
     }
-
 }

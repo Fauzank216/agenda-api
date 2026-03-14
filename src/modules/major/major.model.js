@@ -1,75 +1,33 @@
-import { connection } from "../../../config/db/config.db.js";
+import { runQuery } from "../../utils/tryCatch.wrapper";
 
 export class MajorModel {
-    static create = async function (name, fullName) {
-        let main = null
-        try {
-            const query = 'INSERT INTO t_majors (Name, Full_name) VALUES(?, ?)'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [name, fullName])
-            return QueryResult
-        } finally {
-            await main.end()
-        }
+    static create = async function ({ major_code, major_name }) {
+        const query = 'INSERT INTO t_majors (major_code, major_name) VALUES(?, ?)'
+        let result = await runQuery(query, [major_code, major_name])
+        return result.insertId
     }
 
-    static update = async function (majorId, newName, newFullName) {
-        let main = null
-        try {
-            const query = 'UPDATE t_majors SET Name = ?, Full_name = ? WHERE Id = ?'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [newName, newFullName, majorId])
-            return QueryResult
-        } finally {
-            await main.end()
-        }
+    static update = async function ({ major_code, major_name, id_major }) {
+        const query = 'UPDATE t_majors SET major_name = ?, major_code = ? WHERE id = ?'
+        let result = await runQuery(query, [major_code, major_name, id_major])
+        return result.affectedRows
     }
 
-    static delete = async function (majorId) {
-        let main = null
-        try {
-            const query = 'DELETE FROM t_majors WHERE Id = ?'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [majorId])
-            return QueryResult
-        } finally {
-            await main.end()
-        }
+    static delete = async function (id_major) {
+        const query = 'DELETE FROM t_majors WHERE id = ?'
+        let result = await runQuery(query, [id_major])
+        return result.affectedRows
     }
 
     static findAll = async function () {
-        let main = null
-        try {
-            const query = 'SELECT * FROM t_majors'
-            main = await connection()
-            let [QueryResult] = await main.query(query)
-            return QueryResult
-        } finally {
-            await main.end()
-        }
+        let query = 'SELECT * FROM t_majors'
+        let result = await runQuery(query, [])
+        return result
     }
 
-    static findByName = async function (name) {
-        let main = null
-        try {
-            const query = 'SELECT * FROM t_majors WHERE Name = ?'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [name])
-            return QueryResult
-        } finally {
-            await main.end()
-        }
-    }
-
-    static findById = async function (majorId) {
-        let main = null
-        try {
-            const query = 'SELECT * FROM t_majors WHERE Id = ?'
-            main = await connection()
-            let [QueryResult] = await main.query(query, [majorId])
-            return QueryResult
-        } finally {
-            await main.end()
-        }
+    static findById = async function (id_major) {
+        const query = 'SELECT * FROM t_majors WHERE id = ?'
+        let result = await runQuery(query, [id_major])
+        return result
     }
 }

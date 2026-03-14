@@ -1,30 +1,16 @@
 import { body } from "express-validator";
 import { validateRequest } from "../../middlewares/validator.middleware.js";
 
-export const createMajorValidator = [
-    body('name')
+export const majorValidator = [
+    body('major_code')
         .notEmpty()
-        .withMessage("Nama tidak boleh kosong")
+        .withMessage("major_code tidak boleh kosong")
         .isLength({ max: 15 })
-        .withMessage("Nama jurusan maksimal 15 karakter"),
+        .withMessage("major_code maksimal 15 karakter"),
 
-    body('fullName')
+    body('major_name')
         .isLength({ max: 100 })
-        .withMessage("Maksimal 100 karakter"),
-
-    validateRequest
-]
-
-export const updateMajorValidator = [
-    body('newName')
-        .notEmpty()
-        .withMessage("Nama tidak boleh kosong")
-        .isLength({ max: 15 })
-        .withMessage("Nama jurusan maksimal 15 karakter"),
-
-    body('newFullName')
-        .isLength({ max: 100 })
-        .withMessage("Maksimal 100 karakter"),
+        .withMessage("major_name maksimal 100 karakter"),
 
     validateRequest
 ]

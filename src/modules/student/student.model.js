@@ -1,81 +1,99 @@
 import { connection } from "../../../config/db/config.db.js";
+import { runQuery } from "../../utils/tryCatch.wrapper.js";
 
 export class StudentModel {
-    static create = async function(nisn, name, gender, phone_parent) {
-        let main = null
-        try{
-            main = await connection()
-            const query = "INSERT INTO t_students (nisn, name, gender, phone_parent) VALUES(?, ?, ?, ?)"
-            let [QueryResult] = await main.query(query, [nisn, name, gender, phone_parent])
-            return {
-                id:QueryResult.insertId,
-                nisn,
-                name,
-                gender,
-                phone_parent
+    static #baseQuery = "SELECT * FROM t_students"
+
+    static create = async function ({ nisn, name, gender, phone_parent }) {
+        const query = "INSERT INTO t_students (nisn, name, gender, phone_parent) VALUES(?, ?, ?, ?)"
+        let result = await runQuery(query, [nisn, name, gender, phone_parent])
+        return result.insertId
+    }
+
+    static findAll = async function (criteria) {
+        let conditions = []
+        let values = []
+        let query = StudentModel.#baseQuery
+        let allowedKeys = {
+            'search': 't_students.name LIKE "%?%" OR t_students.nisn LIKE "%?%"',
+            'nisn': 't_students.nisn = ?',
+            'gender': 't_students.gender = ?',
+            'status': 't_students.status = ?'
+        }
+
+        Object.keys(criteria).forEach(key => {
+            if (key in allowedKeys && criteria[key] !== undefined) {
+                conditions.push(allowedKeys[key])
+                values.push(criteria[key])
+            } else {
+                throw Error(`${key}, tidak cocok`)
             }
-        }finally{
-           await main.end()
+        })
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ')
         }
+
+        let result = await runQuery(query, values)
+        return result
     }
 
-    static findAll = async function() {
-        let main = null
-        try{
-            main = await connection()
-            const query = "SELECT * FROM t_students"
-            let [QueryResult] = await main.query(query)
-            return QueryResult
-        }finally{
-           await main.end()
+    static #updateStudent = async function (id, data) {
+        const allowedColumn = ['nisn', 'name', 'gender']
+        let query = 'UPDATE t_students SET nisn = ?, name = ?, gender = ?'
+
+        let values = []
+
+        Object.keys(data).forEach(key => {
+            if (key in allowedColumn) {
+                query += `${allowedColumn[key]} = ?`
+                values.push(data[key])
+            } else {
+                throw Error(`${key}, tidak cocok`)
+            }
+        })
+
+        if (columns.length > 0) {
+            query += `WHERE id = ?`
         }
+
+        let result = await runQuery(query, [...values, id])
+        return result.affectedRows
     }
 
-     static update = async function(idStudent, nisn, name, gender, phone_parent) {
-        let main = null
-        try{
-            main = await connection()
-            const query = "UPDATE t_students SET nisn = ?, name = ?, gender = ?, phone_parent = ? WHERE id = ?"
-            let [QueryResult] = await main.query(query, nisn, name, gender, phone_parent, idStudent)
-            return QueryResult
-        }finally{
-           await main.end()
-        }
+    static update = async function (id_student, data) {
+        let result = await StudentModel.#updateStudent(id, data)
+        result
     }
 
-    static delete = async function(idStudent) {
-        let main = null
-        try{
-            main = await connection()
-            const query = "DELETE FROM t_students WHERE id = ?"
-            let [QueryResult] = await main.query(query, idStudent)
-            return QueryResult
-        }finally{
-           await main.end()
-        }
+    static delete = async function (id_student) {
+        const query = "DELETE FROM t_students WHERE id = ?"
+        let result = await runQuery(query, [id_student])
+        result.affectedRows
     }
 
-    static findByNisn = async function(nisn) {
-        let main = null
-        try{
-            main = await connection()
-            const query = "SELECT * FROM t_students WHERE nisn = ?"
-            let [QueryResult] = await main.query(query, nisn)
-            return QueryResult
-        }finally{
-           await main.end()
-        }
+    static findById = async function (id_student) {
+        const query = StudentModel.#baseQuery + ` WHERE id = ?`
+        let result = await runQuery(query, [id_student])
+        return result
     }
 
-    static findById = async function(idStudent) {
-        let main = null
-        try{
-            main = await connection()
-            const query = "SELECT * FROM t_students WHERE id = ?"
-            let [QueryResult] = await main.query(query, idStudent)
-            return QueryResult
-        }finally{
-           await main.end()
-        }
+    static findAbcentStats = async function (id_student) {
+        const query = `SELECT status_attendance FROM t_agenda_details WHERE id_class_member = ?`
+        let result = await runQuery(query, [id_student])
+        return result
     }
+
+    static findMeetingStats = async function () {
+        const query = `
+                       SELECT t_students.id, t_students.name, 
+                       COUNT(t_agenda_details.id_agenda) as total_meetings FROM t_students
+                       INNER JOIN t_class_members ON t_class_members.id_student = t_students.id
+                       INNER JOIN t_agenda_details ON t_agenda_details.id_class_member = t_class_members.id
+                       GROUP BY t_students.id
+                    `
+         let result = await runQuery(query, [])
+         return result           
+    }
+
 }

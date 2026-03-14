@@ -1,68 +1,29 @@
-import { MajorModel } from "./major.model.js"
+import { tryCatchWrapper } from "../../utils/tryCatch.wrapper.js"
 import { MajorService } from "./major.service.js"
 export class MajorController {
-    static create = async function (req, res, next) {
-        let { name, fullName } = req.body
-        try {
-            const result = await MajorService.create(name, fullName)
-            return res.status(201).json(result)
-        } catch (err) {
-            next(err)
-        }
-    }
+    static create = tryCatchWrapper(async function (req, res, next) {
+        const result = await MajorService.create(req.body)
+        return res.status(201).json(result)
+    })
+    
+    static findAll = tryCatchWrapper(async function (req, res, next) {
+        const result = await MajorService.findAll()
+        return res.status(200).json(result)
+    })
 
-    static findAll = async function (req, res, next) {
-        try {
-            const result = await MajorService.findAll()
-            return res.status(200).json(result)
-        } catch (err) {
-            next(err)
-        }
-    }
+    static findById = tryCatchWrapper(async function (req, res, next) {
+        const result = await MajorService.findById(req.params.id_major)
+        return res.status(200).json(result)
+    })
 
-    static findByName = async function (req, res, next) {
-        let name = req.query.value
-        console.log(name)
-        try {
-            const result = await MajorService.findByName(name)
-            return res.status(200).json(result)
-        } catch (err) {
-            next(err)
-        }
-    }
+    static update = tryCatchWrapper(async function (req, res, next) {
+        let result = await MajorService.update({ ...req.body, id_major: req.params.id_major })
+        return res.status(201).json(result)
 
-    static findById = async function (req, res, next) {
-        let majorId = req.params.majorId
-        try {
-            const result = await MajorService.findById(majorId)
-            return res.status(200).json(result)
-        } catch (err) {
-            next(err)
-        }
-    }
+    })
 
-    static update = async function (req, res, next) {
-        let majorId = req.params.majorId
-        let { newName, newFullName } = req.body
-        try {
-            let result = await MajorService.update(majorId, newName, newFullName)
-            return res.status(201).json(result)
-        } catch (err) {
-            next(err)
-        }
-    }
-
-    static delete = async function (req, res, next) {
-        let majorId = req.params.majorId
-        try {
-            let result = await MajorModel.delete(majorId)
-            return res.status(201).json({
-                success:true,
-                message:"Berhasil Menghapus Major",
-                data:null
-            })
-        } catch (err) {
-            next(err)
-        }
-    }
+    static delete = tryCatchWrapper(async function (req, res, next) {
+        let result = await MajorService.delete(req.params.id_major)
+        return res.status(201).json(result)
+    })
 }

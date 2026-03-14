@@ -13,7 +13,7 @@ export const studentValidator = [
     .isEmpty()
     .withMessage('Gender tidak boleh kosong'),
     
-    body('phoneParent')
+    body('phone_parent')
     .isEmpty()
     .withMessage('No telpon orang tua, wajib diisi'),
 ]

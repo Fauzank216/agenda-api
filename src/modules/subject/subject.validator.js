@@ -1,13 +1,9 @@
 import {body} from 'express-validator'
 import {validateRequest} from '../../middlewares/validator.middleware.js'
 export const subjectValidator = [
-    body('subjectName')
+    body('subject_name')
     .isEmpty()
     .withMessage('Name subject tidak boleh kosong'),
-
-    body('category')
-    .isEmpty()
-    .withMessage('Category tidak boleh kosong'),
 
     validateRequest
 ]
